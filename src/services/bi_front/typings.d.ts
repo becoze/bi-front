@@ -322,7 +322,7 @@ declare namespace API {
   };
 
   type UserRegisterRequest = {
-    checkPassword?: string;
+    confirmPassword?: string;
     userAccount?: string;
     userPassword?: string;
   };

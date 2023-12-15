@@ -1,25 +1,23 @@
 import { Footer } from '@/components';
+import { listChartByPageUsingPOST } from "@/services/bi_front/chartController";
+import { userRegisterUsingPOST } from "@/services/bi_front/userController";
 import {
-  LockOutlined,
-  UserOutlined,
+LockOutlined,
+UserOutlined,
 } from '@ant-design/icons';
 import {
-  LoginForm,
-  ProFormText,
+LoginForm,
+ProFormText,
 } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
-import { Helmet, history, useModel } from '@umijs/max';
-import { Tabs, message } from 'antd';
-import React, {useEffect, useState} from 'react';
-import { flushSync } from 'react-dom';
+import { Helmet,history } from '@umijs/max';
+import { Tabs,message } from 'antd';
+import React,{ useEffect,useState } from 'react';
+import { Link } from "umi";
 import Settings from '../../../../config/defaultSettings';
-import {listChartByPageUsingPOST} from "@/services/bi_front/chartController";
-import {Link} from "umi";
-import {getLoginUserUsingGET, userLoginUsingPOST} from "@/services/bi_front/userController";
 
-const Login: React.FC = () => {
+const Register: React.FC = () => {
   const [type, setType] = useState<string>('account');
-  const { setInitialState } = useModel('@@initialState');
   const containerClassName = useEmotionCss(() => {
     return {
       display: 'flex',
@@ -39,35 +37,27 @@ const Login: React.FC = () => {
   })
 
 
-  const fetchUserInfo = async () => {
-    const userInfo = await getLoginUserUsingGET();
-    if (userInfo) {
-      flushSync(() => {
-        setInitialState((s) => ({
-          ...s,
-          currentUser: userInfo,
-        }));
-      });
+
+  const handleSubmit = async (values: API.UserRegisterRequest) => {
+    const {userPassword, confirmPassword} = values;
+    // Password check
+    if(userPassword !== confirmPassword){ // fields.userPassword !== fields.confirmPassword
+      message.error('Password and Confirm Password not match!');
+      return;
     }
-  };
-  const handleSubmit = async (values: API.UserLoginRequest) => {
     try {
-      // 登录
-      const res = await userLoginUsingPOST(values);
-      if (res.code === 0) {
-        const defaultLoginSuccessMessage = 'Login successful!';
-        message.success(defaultLoginSuccessMessage);
-        await fetchUserInfo();
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
+      // Register
+      const id = await userRegisterUsingPOST({ ...values });
+      if (id) {
+        const defaultRegisterSuccessMessage = 'Register successful!';
+        message.success(defaultRegisterSuccessMessage);
+        history.push('/user/login');
         return;
-      } else {
-        message.error(res.message);
       }
     } catch (error) {
-      const defaultLoginFailureMessage = 'Login failed, please try again!';
+      const defaultRegisterFailureMessage = 'Register failed, please try again!';
       console.log(error);
-      message.error(defaultLoginFailureMessage);
+      message.error(defaultRegisterFailureMessage);
     }
   };
 
@@ -75,7 +65,7 @@ const Login: React.FC = () => {
     <div className={containerClassName}>
       <Helmet>
         <title>
-          {'Login'} - {Settings.title}
+          {'Register'} - {Settings.title}
         </title>
       </Helmet>
       <div
@@ -87,7 +77,7 @@ const Login: React.FC = () => {
         <LoginForm
           submitter={{
             searchConfig: {
-              submitText: 'Login'
+              submitText: 'Register'
             }
           }}
           contentStyle={{
@@ -104,7 +94,7 @@ const Login: React.FC = () => {
             // <a href="https://www.linkedin.com/in/liyuan-liang/" target="_blank"> Beco_Intelligent BI Liyuan liang Becoze </a>
           }
           onFinish={async (values) => {
-            await handleSubmit(values as API.UserLoginRequest);
+            await handleSubmit(values as API.UserRegisterRequest);
           }}
         >
           <Tabs
@@ -114,7 +104,7 @@ const Login: React.FC = () => {
             items={[
               {
                 key: 'account',
-                label: 'Account Login',
+                label: 'Register Account',
               },
             ]}
           />
@@ -127,11 +117,11 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <UserOutlined />,
                 }}
-                placeholder={'User name'}
+                placeholder={'New Username'}
                 rules={[
                   {
                     required: true,
-                    message: 'Please input your username!',
+                    message: 'Please input your new username!',
                   },
                 ]}
               />
@@ -141,12 +131,37 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <LockOutlined />,
                 }}
-                placeholder={'User password'}
+                placeholder={'New User Password'}
                 rules={[
                   {
                     required: true,
-                    message: 'Please input your password!',
+                    message: 'Please input your new password!',
                   },
+                  {
+                    min: 8,
+                    type: 'string',
+                    message: 'Password length should larger than 8',
+                  }
+                ]}
+              />
+
+              <ProFormText.Password
+                name="confirmPassword"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <LockOutlined />,
+                }}
+                placeholder={'Confirm Password'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please reenter your password!',
+                  },
+                  {
+                    min: 8,
+                    type: 'string',
+                    message: 'Password length should larger than 8',
+                  }
                 ]}
               />
             </>
@@ -157,8 +172,8 @@ const Login: React.FC = () => {
               marginBottom: 24,
             }}
           >
-            <Link to="/user/register">
-              Register new account
+            <Link to="/user/login">
+              Go to Login
             </Link>
           </div>
         </LoginForm>
@@ -167,4 +182,4 @@ const Login: React.FC = () => {
     </div>
   );
 };
-export default Login;
+export default Register;

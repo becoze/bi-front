@@ -1,4 +1,4 @@
-import { GithubOutlined } from '@ant-design/icons';
+import { GithubOutlined, LinkedinOutlined } from '@ant-design/icons';
 import { DefaultFooter } from '@ant-design/pro-components';
 import '@umijs/max';
 import React from 'react';
@@ -14,14 +14,14 @@ const Footer: React.FC = () => {
       links={[
         {
           key: 'Beco_Intelligent BI',
-          title: 'Beco_Intelligent BI',
+          title: <a><LinkedinOutlined /> LinkedIn</a>,
           href: 'https://pro.ant.design',
           blankTarget: true,
         },
         {
           key: 'github',
-          title: <GithubOutlined />,
-          href: 'https://github.com/ant-design/ant-design-pro',
+          title: <a> <GithubOutlined /> Beco_Intelligent BI</a>,
+          href: '',
           blankTarget: true,
         },
         {

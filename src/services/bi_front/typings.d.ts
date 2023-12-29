@@ -77,6 +77,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseYuAiResponse_ = {
+    code?: number;
+    data?: YuAiResponse;
+    message?: string;
+  };
+
   type Chart = {
     chartData?: string;
     chartType?: string;
@@ -86,6 +92,7 @@ declare namespace API {
     goal?: string;
     id?: number;
     isDelete?: number;
+    name?: string;
     updateTime?: string;
     userId?: number;
   };
@@ -94,6 +101,7 @@ declare namespace API {
     chartData?: string;
     chartType?: string;
     goal?: string;
+    name?: string;
   };
 
   type ChartEditRequest = {
@@ -101,6 +109,7 @@ declare namespace API {
     chartType?: string;
     goal?: string;
     id?: number;
+    name?: string;
   };
 
   type ChartQueryRequest = {
@@ -108,6 +117,7 @@ declare namespace API {
     current?: number;
     goal?: string;
     id?: number;
+    name?: string;
     pageSize?: number;
     sortField?: string;
     sortOrder?: string;
@@ -119,10 +129,17 @@ declare namespace API {
     chartType?: string;
     goal?: string;
     id?: number;
+    name?: string;
   };
 
   type DeleteRequest = {
     id?: number;
+  };
+
+  type genChartByAiUsingPOSTParams = {
+    chartType?: string;
+    goal?: string;
+    name?: string;
   };
 
   type getChartByIdUsingGETParams = {
@@ -348,5 +365,11 @@ declare namespace API {
     userName?: string;
     userProfile?: string;
     userRole?: string;
+  };
+
+  type YuAiResponse = {
+    chartId?: number;
+    genChart?: string;
+    genResult?: string;
   };
 }

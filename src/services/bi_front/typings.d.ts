@@ -136,7 +136,7 @@ declare namespace API {
     id?: number;
   };
 
-  type genChartByAiUsingPOSTParams = {
+  type genChartByYuAiUsingPOSTParams = {
     chartType?: string;
     goal?: string;
     name?: string;

@@ -1,25 +1,29 @@
-import { useModel } from '@umijs/max';
-import {Button, ColorPicker, Form, Select, Space, Upload} from 'antd';
-import React, {useEffect, useState} from 'react';
-import {listChartByPageUsingPOST} from "@/services/bi_front/chartController";
+import {Button, Form, message, Select, Space, Upload} from 'antd';
+import React from 'react';
 import TextArea from "antd/es/input/TextArea";
 import {UploadOutlined} from "@ant-design/icons";
-
-const Login: React.FC = () => {
-  const [type, setType] = useState<string>('account');
-  const { setInitialState } = useModel('@@initialState');
+import { genChartByYuAiUsingPOST } from "@/services/bi_front/chartController";
 
 
-  useEffect(()=>{
-    listChartByPageUsingPOST({}).then(res => {
-      console.error('res', res)
-      // todo push data to backend
-    })
-  })
+/**
+ * Generate AI Chart
+ * @constructor
+ */
+const AddChart: React.FC = () => {
 
-
-  const onFinish = (values: any) => {
-    console.log('User Input ', values);
+  const onFinish = async (values: any) => {
+    console.log(values.file)
+    const params = {
+      ...values,
+      file: undefined
+    }
+    try {
+      const res = await genChartByYuAiUsingPOST(params, {}, values.file.file.originFileObj)
+      console.log(res);
+      message.success('AI analysis success');
+    } catch (e: any) {
+      message.error('AI analysis fail, ' + e.message)
+    }
   };
 
   return (
@@ -77,4 +81,4 @@ const Login: React.FC = () => {
     </div>
   );
 };
-export default Login;
+export default AddChart;

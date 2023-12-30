@@ -1,8 +1,9 @@
 import {Button, Form, message, Select, Space, Upload} from 'antd';
-import React from 'react';
+import React, {useState} from 'react';
 import TextArea from "antd/es/input/TextArea";
 import {UploadOutlined} from "@ant-design/icons";
 import { genChartByYuAiUsingPOST } from "@/services/bi_front/chartController";
+import ReactECharts from 'echarts-for-react';
 
 
 /**
@@ -10,7 +11,13 @@ import { genChartByYuAiUsingPOST } from "@/services/bi_front/chartController";
  * @constructor
  */
 const AddChart: React.FC = () => {
+  const [chart, setChart] = useState<API.YuAiResponse>();
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
+  /**
+   * submit
+   * @param values
+   */
   const onFinish = async (values: any) => {
     console.log(values.file)
     const params = {
@@ -20,7 +27,12 @@ const AddChart: React.FC = () => {
     try {
       const res = await genChartByYuAiUsingPOST(params, {}, values.file.file.originFileObj)
       console.log(res);
-      message.success('AI analysis success');
+      if(!res?.data){
+        message.error('AI analysis fail.')
+      }else{
+        message.success('AI analysis success');
+        setChart(res.data)
+      }
     } catch (e: any) {
       message.error('AI analysis fail, ' + e.message)
     }
@@ -78,6 +90,16 @@ const AddChart: React.FC = () => {
           </Space>
         </Form.Item>
       </Form>
+
+      {/*Result showcase area*/}
+      <div>
+        Chart: {
+          chart?.genChart && <ReactECharts option={chart?.genChart} />
+        }
+      </div>
+      <div>
+        Result: {chart?.genResult}
+      </div>
     </div>
   );
 };

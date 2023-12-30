@@ -19,6 +19,11 @@ const AddChart: React.FC = () => {
    * @param values
    */
   const onFinish = async (values: any) => {
+    // prevent multiple submit
+    if(submitting){
+      return;
+    }
+    setSubmitting(true);
     console.log(values.file)
     const params = {
       ...values,
@@ -36,6 +41,7 @@ const AddChart: React.FC = () => {
     } catch (e: any) {
       message.error('AI analysis fail, ' + e.message)
     }
+    setSubmitting(false);
   };
 
   return (
@@ -83,7 +89,7 @@ const AddChart: React.FC = () => {
 
         <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
           <Space>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={submitting} disabled={submitting}>
               Submit
             </Button>
             <Button htmlType="reset">reset</Button>

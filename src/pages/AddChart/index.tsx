@@ -101,7 +101,9 @@ const AddChart: React.FC = () => {
               { value: 'Line Chart', label: 'Line Chart' },
               { value: 'Pie Chart', label: 'Pie chart' },
               { value: 'Scatter Plot', label: 'Scatter Plot' },
-              { value: 'Area Chart', label: 'Area Chart' },
+              { value: 'Histogram', label: 'Histogram' },
+              { value: 'Radar Chart', label: 'Radar Chart' },
+              { value: 'Treemap', label: 'Treemap' },
             ];
           }}
           placeholder="Please select a country"

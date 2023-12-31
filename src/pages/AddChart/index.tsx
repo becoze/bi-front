@@ -1,4 +1,4 @@
-import {Button, Form, message, Select, Space, Upload} from 'antd';
+import {Button, Card, Col, Divider, Form, message, Row, Select, Space, Upload} from 'antd';
 import React, {useState} from 'react';
 import TextArea from "antd/es/input/TextArea";
 import {UploadOutlined} from "@ant-design/icons";
@@ -58,88 +58,100 @@ const AddChart: React.FC = () => {
 
   return (
     <div className="add-chart">
-      <Form
-        name="add-chart"
-        onFinish={onFinish}
-        initialValues={{  }}
-      >
+      <Row gutter={24}>
+        <Col span={12}>
+          <Card title="Input">
+            <Form
+              name="add-chart"
+              onFinish={onFinish}
+              initialValues={{  }}
+            >
 
-        <Form.Item name="goal" label="Goal" rules={[{ required: true, message: 'Please enter your analysis goal!' }]}>
-          <TextArea placeholder = "Analysis Goal, For example: Give me the user grow analysis"/>
-        </Form.Item>
+              <Form.Item name="goal" label="Goal" rules={[{ required: true, message: 'Please enter your analysis goal!' }]}>
+                <TextArea placeholder = "Analysis Goal, For example: Give me the user grow analysis"/>
+              </Form.Item>
 
-        <Form.Item name="name" label="Chart name" rules={[{ required: true, message: 'Please give a name to the chart!' }]}>
-          <TextArea placeholder = "Name of the chart, For example: User grow "/>
-        </Form.Item>
+              <Form.Item name="name" label="Chart name" rules={[{ required: true, message: 'Please give a name to the chart!' }]}>
+                <TextArea placeholder = "Name of the chart, For example: User grow "/>
+              </Form.Item>
 
-        {/*<Form.Item*/}
-        {/*  name="chartType"*/}
-        {/*  label="Chart Type"*/}
-        {/*>*/}
-        {/*  < Select*/}
-        {/*    placeholder="Please select a chart type"*/}
-        {/*    options={[*/}
-        {/*      {value: '(Let ai deice)', label: ''},*/}
-        {/*      {value: 'bar Chart', label: 'bar Chart'},*/}
-        {/*      {value: 'line Chart', label: 'line Chart'},*/}
-        {/*      {value: 'pie chart', label: 'pie Chart'},*/}
-        {/*      {value: 'scatter Plot', label: 'scatter Plot'},*/}
-        {/*      {value: 'area Chart', label: 'area Chart'},*/}
-        {/*  ]}/>*/}
-        {/*</Form.Item>*/}
+              {/*<Form.Item*/}
+              {/*  name="chartType"*/}
+              {/*  label="Chart Type"*/}
+              {/*>*/}
+              {/*  < Select*/}
+              {/*    placeholder="Please select a chart type"*/}
+              {/*    options={[*/}
+              {/*      {value: '(Let ai deice)', label: ''},*/}
+              {/*      {value: 'bar Chart', label: 'bar Chart'},*/}
+              {/*      {value: 'line Chart', label: 'line Chart'},*/}
+              {/*      {value: 'pie chart', label: 'pie Chart'},*/}
+              {/*      {value: 'scatter Plot', label: 'scatter Plot'},*/}
+              {/*      {value: 'area Chart', label: 'area Chart'},*/}
+              {/*  ]}/>*/}
+              {/*</Form.Item>*/}
 
-        <ProFormSelect
-          name="chartType"
-          label="Chart Type"
-          showSearch
-          debounceTime={300}
-          request={async () => {
-            // await waitTime(100);
-            return [
-              { value: '(Let ai deice)', label: '' },
-              { value: 'Bar Chart', label: 'Bar Chart' },
-              { value: 'Line Chart', label: 'Line Chart' },
-              { value: 'Pie Chart', label: 'Pie chart' },
-              { value: 'Scatter Plot', label: 'Scatter Plot' },
-              { value: 'Histogram', label: 'Histogram' },
-              { value: 'Radar Chart', label: 'Radar Chart' },
-              { value: 'Treemap', label: 'Treemap' },
-            ];
-          }}
-          placeholder="Please select a country"
-          rules={[{ required: true, message: 'Please select your country!' }]}
-        />
-
-
-        <Form.Item
-          name="file"
-          label="Row Data"
-        >
-          <Upload name="file" >
-            <Button icon={<UploadOutlined />}>Upload CSV file</Button>
-          </Upload>
-        </Form.Item>
+              <ProFormSelect
+                name="chartType"
+                label="Chart Type"
+                showSearch
+                debounceTime={300}
+                request={async () => {
+                  // await waitTime(100);
+                  return [
+                    { value: '(Let ai deice)', label: '' },
+                    { value: 'Bar Chart', label: 'Bar Chart' },
+                    { value: 'Line Chart', label: 'Line Chart' },
+                    { value: 'Pie Chart', label: 'Pie chart' },
+                    { value: 'Scatter Plot', label: 'Scatter Plot' },
+                    { value: 'Histogram', label: 'Histogram' },
+                    { value: 'Radar Chart', label: 'Radar Chart' },
+                    { value: 'Treemap', label: 'Treemap' },
+                  ];
+                }}
+                placeholder="Please select a country"
+                rules={[{ required: true, message: 'Please select your country!' }]}
+              />
 
 
-        <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
-          <Space>
-            <Button type="primary" htmlType="submit" loading={submitting} disabled={submitting}>
-              Submit
-            </Button>
-            <Button htmlType="reset">reset</Button>
-          </Space>
-        </Form.Item>
-      </Form>
+              <Form.Item
+                name="file"
+                label="Row Data"
+              >
+                <Upload name="file" >
+                  <Button icon={<UploadOutlined />}>Upload CSV file</Button>
+                </Upload>
+              </Form.Item>
 
-      {/*Result showcase area*/}
-      <div>
-        Chart: {
-          eChartOption && <ReactECharts option={eChartOption} />
-        }
-      </div>
-      <div>
-        Result: {chart?.genResult}
-      </div>
+
+              <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
+                <Space>
+                  <Button type="primary" htmlType="submit" loading={submitting} disabled={submitting}>
+                    Submit
+                  </Button>
+                  <Button htmlType="reset">reset</Button>
+                </Space>
+              </Form.Item>
+            </Form>
+          </Card>
+
+        </Col>
+
+        <Col span={12}>
+          <Card title="Chart">
+            { eChartOption && <ReactECharts option={eChartOption} /> }
+          </Card>
+
+          <Divider />
+
+          <Card title="Concultion">
+            {chart?.genResult}
+          </Card>
+        </Col>
+      </Row>
+
+
+
     </div>
   );
 };

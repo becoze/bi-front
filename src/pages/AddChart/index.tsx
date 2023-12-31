@@ -4,6 +4,7 @@ import TextArea from "antd/es/input/TextArea";
 import {UploadOutlined} from "@ant-design/icons";
 import { genChartByYuAiUsingPOST } from "@/services/bi_front/chartController";
 import ReactECharts from 'echarts-for-react';
+import {ProFormSelect} from "@ant-design/pro-components";
 
 
 /**
@@ -13,6 +14,7 @@ import ReactECharts from 'echarts-for-react';
 const AddChart: React.FC = () => {
   const [chart, setChart] = useState<API.YuAiResponse>();
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [eChartOption, setEChartOption] = useState<any>();
 
   /**
    * submit
@@ -24,7 +26,8 @@ const AddChart: React.FC = () => {
       return;
     }
     setSubmitting(true);
-    console.log(values.file)
+
+
     const params = {
       ...values,
       file: undefined
@@ -36,11 +39,20 @@ const AddChart: React.FC = () => {
         message.error('AI analysis fail.')
       }else{
         message.success('AI analysis success');
-        setChart(res.data)
+
+        // Verify JSON parsing res.data.genChart is valid
+        const eChartOption = JSON.parse(res.data.genChart ?? '');
+        if(!eChartOption) {
+          throw new Error("Chart parsing error.")
+        } else {
+          setChart(res.data);
+          setEChartOption(eChartOption);
+        }
       }
     } catch (e: any) {
       message.error('AI analysis fail, ' + e.message)
     }
+
     setSubmitting(false);
   };
 
@@ -56,25 +68,45 @@ const AddChart: React.FC = () => {
           <TextArea placeholder = "Analysis Goal, For example: Give me the user grow analysis"/>
         </Form.Item>
 
-        <Form.Item name="name" label="Chart name" rules={[{ required: true, message: 'Please give a me to the chart!' }]}>
+        <Form.Item name="name" label="Chart name" rules={[{ required: true, message: 'Please give a name to the chart!' }]}>
           <TextArea placeholder = "Name of the chart, For example: User grow "/>
         </Form.Item>
 
-        <Form.Item
+        {/*<Form.Item*/}
+        {/*  name="chartType"*/}
+        {/*  label="Chart Type"*/}
+        {/*>*/}
+        {/*  < Select*/}
+        {/*    placeholder="Please select a chart type"*/}
+        {/*    options={[*/}
+        {/*      {value: '(Let ai deice)', label: ''},*/}
+        {/*      {value: 'bar Chart', label: 'bar Chart'},*/}
+        {/*      {value: 'line Chart', label: 'line Chart'},*/}
+        {/*      {value: 'pie chart', label: 'pie Chart'},*/}
+        {/*      {value: 'scatter Plot', label: 'scatter Plot'},*/}
+        {/*      {value: 'area Chart', label: 'area Chart'},*/}
+        {/*  ]}/>*/}
+        {/*</Form.Item>*/}
+
+        <ProFormSelect
           name="chartType"
           label="Chart Type"
-        >
-          < Select
-            placeholder="Please select a chart type"
-            options={[
-              {value: '(Let ai deice)', label: ''},
-              {value: 'Bar chart', label: 'Bar chart'},
-              {value: 'Line chart', label: 'Line chart'},
-              {value: 'Pie chart', label: 'Pie chart'},
-              {value: 'xxx', label: 'xxx'},
-              {value: 'yyy', label: 'yyy'},
-          ]}/>
-        </Form.Item>
+          showSearch
+          debounceTime={300}
+          request={async () => {
+            // await waitTime(100);
+            return [
+              { value: '(Let ai deice)', label: '' },
+              { value: 'Bar Chart', label: 'Bar Chart' },
+              { value: 'Line Chart', label: 'Line Chart' },
+              { value: 'Pie Chart', label: 'Pie chart' },
+              { value: 'Scatter Plot', label: 'Scatter Plot' },
+              { value: 'Area Chart', label: 'Area Chart' },
+            ];
+          }}
+          placeholder="Please select a country"
+          rules={[{ required: true, message: 'Please select your country!' }]}
+        />
 
 
         <Form.Item
@@ -100,7 +132,7 @@ const AddChart: React.FC = () => {
       {/*Result showcase area*/}
       <div>
         Chart: {
-          chart?.genChart && <ReactECharts option={chart?.genChart} />
+          eChartOption && <ReactECharts option={eChartOption} />
         }
       </div>
       <div>

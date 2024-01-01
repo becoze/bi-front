@@ -1,4 +1,4 @@
-import {Button, Card, Col, Divider, Form, message, Row, Select, Space, Upload} from 'antd';
+import {Button, Card, Col, Divider, Form, message, Row, Space, Spin, Upload} from 'antd';
 import React, {useState} from 'react';
 import TextArea from "antd/es/input/TextArea";
 import {UploadOutlined} from "@ant-design/icons";
@@ -25,8 +25,12 @@ const AddChart: React.FC = () => {
     if(submitting){
       return;
     }
+    // turn submitting on
     setSubmitting(true);
 
+    // reset and clear Chart & eCharts-option, prevent stacking
+    setChart(undefined);
+    setEChartOption(undefined);
 
     const params = {
       ...values,
@@ -34,7 +38,7 @@ const AddChart: React.FC = () => {
     }
     try {
       const res = await genChartByYuAiUsingPOST(params, {}, values.file.file.originFileObj)
-      console.log(res);
+
       if(!res?.data){
         message.error('AI analysis fail.')
       }else{
@@ -52,7 +56,7 @@ const AddChart: React.FC = () => {
     } catch (e: any) {
       message.error('AI analysis fail, ' + e.message)
     }
-
+    // turn submitting off, when submitting end
     setSubmitting(false);
   };
 
@@ -64,7 +68,10 @@ const AddChart: React.FC = () => {
             <Form
               name="add-chart"
               onFinish={onFinish}
-              initialValues={{  }}
+              labelAlign="left"
+              labelCol={{span:4}}
+              // wrapperCol={{span:16}}
+              // initialValues={{  }}
             >
 
               <Form.Item name="goal" label="Goal" rules={[{ required: true, message: 'Please enter your analysis goal!' }]}>
@@ -74,22 +81,6 @@ const AddChart: React.FC = () => {
               <Form.Item name="name" label="Chart name" rules={[{ required: true, message: 'Please give a name to the chart!' }]}>
                 <TextArea placeholder = "Name of the chart, For example: User grow "/>
               </Form.Item>
-
-              {/*<Form.Item*/}
-              {/*  name="chartType"*/}
-              {/*  label="Chart Type"*/}
-              {/*>*/}
-              {/*  < Select*/}
-              {/*    placeholder="Please select a chart type"*/}
-              {/*    options={[*/}
-              {/*      {value: '(Let ai deice)', label: ''},*/}
-              {/*      {value: 'bar Chart', label: 'bar Chart'},*/}
-              {/*      {value: 'line Chart', label: 'line Chart'},*/}
-              {/*      {value: 'pie chart', label: 'pie Chart'},*/}
-              {/*      {value: 'scatter Plot', label: 'scatter Plot'},*/}
-              {/*      {value: 'area Chart', label: 'area Chart'},*/}
-              {/*  ]}/>*/}
-              {/*</Form.Item>*/}
 
               <ProFormSelect
                 name="chartType"
@@ -118,13 +109,13 @@ const AddChart: React.FC = () => {
                 name="file"
                 label="Row Data"
               >
-                <Upload name="file" >
+                <Upload name="file" maxCount={1}>
                   <Button icon={<UploadOutlined />}>Upload CSV file</Button>
                 </Upload>
               </Form.Item>
 
 
-              <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
+              <Form.Item wrapperCol={{ span: 12, offset: 4 }}>
                 <Space>
                   <Button type="primary" htmlType="submit" loading={submitting} disabled={submitting}>
                     Submit
@@ -134,24 +125,22 @@ const AddChart: React.FC = () => {
               </Form.Item>
             </Form>
           </Card>
-
         </Col>
 
         <Col span={12}>
           <Card title="Chart">
-            { eChartOption && <ReactECharts option={eChartOption} /> }
+            { eChartOption ? <ReactECharts option={eChartOption} /> : <div>Please submit information at the left panel </div>}
+            <Spin spinning={submitting} />
           </Card>
 
           <Divider />
 
           <Card title="Concultion">
-            {chart?.genResult}
+            {chart?.genResult ?? <div>Please submit information at the left panel </div>}
+            <Spin spinning={submitting} />
           </Card>
         </Col>
       </Row>
-
-
-
     </div>
   );
 };

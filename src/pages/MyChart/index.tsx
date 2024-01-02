@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {listMyChartByPageUsingPOST} from "@/services/bi_front/chartController";
-import {message} from "antd";
+import {Avatar, List, message} from "antd";
+import ReactECharts from "echarts-for-react";
 
 
 /**
@@ -43,12 +44,36 @@ const MyChartPage: React.FC = () => {
 
   return (
     <div className="My-Chart">
-      My Chart:
-      { JSON.stringify(chartList)}
-      <br/>
-      Total:
-      {totalChart}
-
+      <List
+        itemLayout="vertical"
+        size="large"
+        pagination={{
+          onChange: (page) => {
+            console.log(page);
+          },
+          pageSize: 3,
+        }}
+        dataSource={chartList}
+        footer={
+          <div>
+            <b>ant design</b> footer part
+          </div>
+        }
+        renderItem={(item) => (
+          <List.Item
+            key={item.id}
+          >
+            <List.Item.Meta
+              avatar={<Avatar src={'https://raw.githubusercontent.com/becoze/becozePictureHosting/main/usercenter/cat_read%202.png'} />}
+              title={ item.name }
+              description={ item.chartType ? ('Given Chart Type: ' + item.chartType) : 'Not given - AI deiced' }
+            />
+            {'Goal: ' + item.goal}
+            { item.genChart }
+            {/*<ReactECharts option={JSON.parse(item.genChart ?? '{}')} />*/}
+          </List.Item>
+        )}
+      />
     </div>
   );
 };

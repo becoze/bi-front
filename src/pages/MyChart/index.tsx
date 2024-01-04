@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {listMyChartByPageUsingPOST} from "@/services/bi_front/chartController";
-import {Avatar, List, message} from "antd";
+import {Avatar, Card, List, message} from "antd";
 import ReactECharts from "echarts-for-react";
+import {useModel} from "@@/exports";
 
 
 /**
@@ -26,6 +27,10 @@ const MyChartPage: React.FC = () => {
 
   // A status check if loading charts
   const [loading, setLoading] = useState<boolean>(true);
+
+  // User login state
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState ?? {};
 
   const loadChart = async () => {
     setLoading(true);
@@ -73,7 +78,7 @@ const MyChartPage: React.FC = () => {
             key={item.id}
           >
             <List.Item.Meta
-              avatar={<Avatar src={'https://raw.githubusercontent.com/becoze/becozePictureHosting/main/usercenter/cat_read%202.png'} />}
+              avatar={<Avatar src={currentUser && currentUser.userAvatar} />}
               title={ item.name }
               description={ item.chartType ? ('Given Chart Type: ' + item.chartType) : 'Not given - AI deiced' }
             />

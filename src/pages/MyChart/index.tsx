@@ -58,8 +58,14 @@ const MyChartPage: React.FC = () => {
   return (
     <div className="My-Chart">
       <List
-        itemLayout="vertical"
-        size="large"
+        grid={{ gutter: 16,
+          xs: 1,
+          sm: 1,
+          md: 1,
+          lg: 2,
+          xl: 2,
+          xxl: 2,
+        }}
         pagination={{
           onChange: (page) => {
             console.log(page);
@@ -68,22 +74,21 @@ const MyChartPage: React.FC = () => {
         }}
         loading={loading}
         dataSource={chartList}
-        footer={
-          <div>
-            <b>ant design</b> footer part
-          </div>
-        }
         renderItem={(item) => (
           <List.Item
             key={item.id}
           >
-            <List.Item.Meta
-              avatar={<Avatar src={currentUser && currentUser.userAvatar} />}
-              title={ item.name }
-              description={ item.chartType ? ('Given Chart Type: ' + item.chartType) : 'Not given - AI deiced' }
-            />
-            {'Goal: ' + item.goal}
-            <ReactECharts option={JSON.parse(item.genChart ?? '{}')} />
+            <Card>
+              <List.Item.Meta
+                avatar={<Avatar src={currentUser && currentUser.userAvatar} />}
+                title={ item.name }
+                description={ item.chartType ? ('Given Chart Type: ' + item.chartType) : 'Not given - AI deiced' }
+              />
+              {'Goal: ' + item.goal}
+
+              <div style={{marginBottom: 16}}></div>
+              <ReactECharts option={JSON.parse(item.genChart ?? '{}')} />
+            </Card>
           </List.Item>
         )}
       />

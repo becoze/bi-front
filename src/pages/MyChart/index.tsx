@@ -14,15 +14,21 @@ const MyChartPage: React.FC = () => {
   const initSearchParams = {
     pageSize: 12,
   }
+
+  //
   const [searchParams, setSearchParams] = useState<API.ChartQueryRequest>({...initSearchParams})
 
-  // Keep Chart to display a list
+  // List of a chart from database
   const [chartList, setChartList] = useState<API.Chart[]>();
 
-  // Keep total Chart number
+  // Total Chart number
   const [totalChart, setTotalChart] = useState<number>(0);
 
+  // A status check if loading charts
+  const [loading, setLoading] = useState<boolean>(true);
+
   const loadChart = async () => {
+    setLoading(true);
     try {
       const res = await listMyChartByPageUsingPOST(searchParams);
       if(res.data){
@@ -34,6 +40,8 @@ const MyChartPage: React.FC = () => {
     } catch (e: any) {
       message.error('Chart loading failed' + e.message);
     }
+
+    setLoading(false);
   }
 
 
@@ -51,8 +59,9 @@ const MyChartPage: React.FC = () => {
           onChange: (page) => {
             console.log(page);
           },
-          pageSize: 3,
+          pageSize: searchParams.pageSize,
         }}
+        loading={loading}
         dataSource={chartList}
         footer={
           <div>

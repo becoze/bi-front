@@ -69,8 +69,7 @@ const MyChartPage: React.FC = () => {
               description={ item.chartType ? ('Given Chart Type: ' + item.chartType) : 'Not given - AI deiced' }
             />
             {'Goal: ' + item.goal}
-            { item.genChart }
-            {/*<ReactECharts option={JSON.parse(item.genChart ?? '{}')} />*/}
+            <ReactECharts option={JSON.parse(item.genChart ?? '{}')} />
           </List.Item>
         )}
       />

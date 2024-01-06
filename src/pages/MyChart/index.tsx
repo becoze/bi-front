@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {listMyChartByPageUsingPOST} from "@/services/bi_front/chartController";
-import {Avatar, Card, Divider, List, message} from "antd";
+import {Avatar, Card, List, message} from "antd";
 import ReactECharts from "echarts-for-react";
 import {useModel} from "@@/exports";
 import Search from "antd/es/input/Search";
@@ -74,7 +74,7 @@ const MyChartPage: React.FC = () => {
   return (
     <div className="My-Chart">
       <div className={'margin-16'}>
-        <Search placeholder="Search Chart Name" enterButton onSearch={(value) => {
+        <Search placeholder="Search Chart Name" enterButton loading={loading} onSearch={(value) => {
           setSearchParams({
             // init the parameters to go back to first page for each search
             ...initSearchParams,
@@ -82,6 +82,7 @@ const MyChartPage: React.FC = () => {
           })
         } }/>
       </div>
+      <div style={{marginBottom: 16}}></div>
       <List
         grid={{ gutter: 16,
           xs: 1,

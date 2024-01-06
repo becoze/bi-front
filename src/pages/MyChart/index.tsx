@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {listMyChartByPageUsingPOST} from "@/services/bi_front/chartController";
-import {Avatar, Card, List, message} from "antd";
+import {Avatar, Card, Divider, List, message} from "antd";
 import ReactECharts from "echarts-for-react";
 import {useModel} from "@@/exports";
+import Search from "antd/es/input/Search";
 
 
 /**
@@ -12,11 +13,14 @@ import {useModel} from "@@/exports";
 const MyChartPage: React.FC = () => {
 
   // Load Chart from database using user parameters
-  const initSearchParams = {
-    pageSize: 12,
-  }
+    const initSearchParams = {
+      // Initialize the "current" page, which is the default page
+      current: 1,
+      // Item on each page
+      pageSize: 2,
+    }
 
-  //
+  // Parameters from backend: chartType, current, goal, id, name, pageSize, stc.
   const [searchParams, setSearchParams] = useState<API.ChartQueryRequest>({...initSearchParams})
 
   // List of a chart from database
@@ -39,6 +43,18 @@ const MyChartPage: React.FC = () => {
       if(res.data){
         setChartList(res.data.records ?? []);
         setTotalChart(res.data.total ?? 0);
+        // 抹去eChart的"title"
+        if(res.data.records){
+          // `forEach`: 遍历每一条数据，每一行内容
+          res.data.records.forEach(data => {
+            // 转换data.genChart成JSON格式
+            const chartOption = JSON.parse(data.genChart ?? '{}');
+            // 抹掉title
+            chartOption.title = undefined;
+            // 保存加工过的对象
+            data.genChart = JSON.stringify(chartOption);
+          })
+        }
       } else {
         message.error('Chart loading failed');
       }
@@ -57,6 +73,15 @@ const MyChartPage: React.FC = () => {
 
   return (
     <div className="My-Chart">
+      <div className={'margin-16'}>
+        <Search placeholder="Search Chart Name" enterButton onSearch={(value) => {
+          setSearchParams({
+            // init the parameters to go back to first page for each search
+            ...initSearchParams,
+            name: value,
+          })
+        } }/>
+      </div>
       <List
         grid={{ gutter: 16,
           xs: 1,
@@ -67,9 +92,15 @@ const MyChartPage: React.FC = () => {
           xxl: 2,
         }}
         pagination={{
-          onChange: (page) => {
-            console.log(page);
+          onChange: (page, pageSize) => {
+            setSearchParams({
+              ...searchParams,
+              current: page,
+              pageSize,
+            })
           },
+          current: searchParams.current,
+          total: totalChart,
           pageSize: searchParams.pageSize,
         }}
         loading={loading}

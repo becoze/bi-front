@@ -17,7 +17,7 @@ const MyChartPage: React.FC = () => {
       // Initialize the "current" page, which is the default page
       current: 1,
       // Item on each page
-      pageSize: 2,
+      pageSize: 6,
     }
 
   // Parameters from backend: chartType, current, goal, id, name, pageSize, stc.

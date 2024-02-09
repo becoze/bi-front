@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {listMyChartByPageUsingPOST} from "@/services/bi_front/chartController";
-import {Avatar, Card, List, message} from "antd";
+import {Avatar, Card, List, message, Result} from "antd";
 import ReactECharts from "echarts-for-react";
 import {useModel} from "@@/exports";
 import Search from "antd/es/input/Search";
@@ -18,6 +18,8 @@ const MyChartPage: React.FC = () => {
       current: 1,
       // Item on each page
       pageSize: 6,
+      sortField: 'createTime',
+      sortOrder: 'desc',
     }
 
   // Parameters from backend: chartType, current, goal, id, name, pageSize, stc.
@@ -47,12 +49,14 @@ const MyChartPage: React.FC = () => {
         if(res.data.records){
           // `forEach`: 遍历每一条数据，每一行内容
           res.data.records.forEach(data => {
-            // 转换data.genChart成JSON格式
-            const chartOption = JSON.parse(data.genChart ?? '{}');
-            // 抹掉title
-            chartOption.title = undefined;
-            // 保存加工过的对象
-            data.genChart = JSON.stringify(chartOption);
+            if(data.status === 'succeed'){
+              // 转换data.genChart成JSON格式
+              const chartOption = JSON.parse(data.genChart ?? '{}');
+              // 抹掉title
+              chartOption.title = undefined;
+              // 保存加工过的对象
+              data.genChart = JSON.stringify(chartOption);
+            }
           })
         }
       } else {
@@ -116,10 +120,45 @@ const MyChartPage: React.FC = () => {
                 title={ item.name }
                 description={ item.chartType ? ('Given Chart Type: ' + item.chartType) : 'Not given - AI deiced' }
               />
-              {'Goal: ' + item.goal}
-
-              <div style={{marginBottom: 16}}></div>
-              <ReactECharts option={JSON.parse(item.genChart ?? '{}')} />
+              <>
+                {
+                  item.status === 'wait' && <>
+                    <Result
+                      status="warning"
+                      title="Waiting for processing..."
+                      subTitle={item.execMessage ?? 'System buys, please wait.'}
+                    />
+                  </>
+                }
+                {
+                  item.status === 'running' && <>
+                    <Result
+                      status="info"
+                      title="Generating concultions"
+                      subTitle={item.execMessage}
+                    />
+                  </>
+                }
+                {
+                  item.status === 'succeed' && <>
+                    <div style={{ marginBottom: 16 }} />
+                    <p> {'Goal: ' + item.goal} </p>
+                    <div style={{ marginBottom: 16 }}/>
+                    <ReactECharts option={JSON.parse(item.genChart ?? '{}')} />
+                    <div style={{ marginBottom: 16 }} />
+                    <p> {'Create Time: ' + item.createTime} </p>
+                  </>
+                }
+                {
+                  item.status === 'failed' && <>
+                    <Result
+                      status="error"
+                      title="Generating failed!"
+                      subTitle={item.execMessage}
+                    />
+                  </>
+                }
+              </>
             </Card>
           </List.Item>
         )}

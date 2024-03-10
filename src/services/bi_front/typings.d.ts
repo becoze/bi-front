@@ -143,6 +143,12 @@ declare namespace API {
     id?: number;
   };
 
+  type genChartByYuAiAsyncMqUsingPOSTParams = {
+    chartType?: string;
+    goal?: string;
+    name?: string;
+  };
+
   type genChartByYuAiAsyncUsingPOSTParams = {
     chartType?: string;
     goal?: string;

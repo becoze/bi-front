@@ -2,7 +2,7 @@ import {Button, Card, Form, message, Space, Upload} from 'antd';
 import React, {useState} from 'react';
 import TextArea from "antd/es/input/TextArea";
 import {UploadOutlined} from "@ant-design/icons";
-import {genChartByYuAiAsyncUsingPOST} from "@/services/bi_front/chartController";
+import {genChartByYuAiAsyncMqUsingPOST} from "@/services/bi_front/chartController";
 import {ProFormSelect} from "@ant-design/pro-components";
 import {useForm} from "antd/es/form/Form";
 
@@ -33,7 +33,7 @@ const AddChartAsync: React.FC = () => {
       file: undefined
     }
     try {
-      const res = await genChartByYuAiAsyncUsingPOST(params, {}, values.file.file.originFileObj)
+      const res = await genChartByYuAiAsyncMqUsingPOST(params, {}, values.file.file.originFileObj)
 
       if(!res?.data){
         message.error('Submit fail, Please try again later')

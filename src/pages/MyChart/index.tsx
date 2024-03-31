@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {listMyChartByPageUsingPOST} from "@/services/bi_front/chartController";
-import {Avatar, Card, List, message, Result} from "antd";
+import {Avatar, Button, Card, List, message, Popconfirm, Result} from "antd";
 import ReactECharts from "echarts-for-react";
 import {useModel} from "@@/exports";
 import Search from "antd/es/input/Search";
+import {QuestionCircleOutlined} from "@ant-design/icons";
 
 
 /**
@@ -68,6 +69,21 @@ const MyChartPage: React.FC = () => {
 
     setLoading(false);
   }
+
+  const showTime = (inputTimeString: any) => {
+    // Parse the input string into a Date object
+    const date = new Date(inputTimeString);
+
+    // Format the date and time
+    const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const formattedDate = date.toLocaleDateString();
+
+    // Concatenate the time and date in the desired format
+    const formattedTimeString = `${time} ${formattedDate}`;
+
+    return formattedTimeString;
+  }
+
 
 
   // Refresh data. Run loadChart() when first launched the page, and reload loadChart() when any change on searchParams
@@ -146,7 +162,7 @@ const MyChartPage: React.FC = () => {
                     <div style={{ marginBottom: 16 }}/>
                     <ReactECharts option={JSON.parse(item.genChart ?? '{}')} />
                     <div style={{ marginBottom: 16 }} />
-                    <p> {'Create Time: ' + item.createTime} </p>
+                    <p> {'Create Time: ' + showTime(item.createTime)} </p>
                   </>
                 }
                 {
@@ -159,6 +175,18 @@ const MyChartPage: React.FC = () => {
                   </>
                 }
               </>
+              <Popconfirm
+                title="Delete"
+                description="Confirm Delete?"
+                onConfirm={() => {
+                  // deleteChartUsingPOST();
+                  message.success('Deleted successfully!')
+                  loadChart();
+                }}
+                icon={<QuestionCircleOutlined style={{color: 'pink'}}/>}
+              >
+                <Button danger>Delete</Button>
+              </Popconfirm>
             </Card>
           </List.Item>
         )}

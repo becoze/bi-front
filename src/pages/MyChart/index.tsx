@@ -159,9 +159,10 @@ const MyChartPage: React.FC = () => {
                   item.status === 'succeed' && <>
                     <div style={{ marginBottom: 16 }} />
                     <p> {'Goal: ' + item.goal} </p>
-                    <div style={{ marginBottom: 16 }}/>
+                    <div style={{ marginBottom: -30 }}/>
                     <ReactECharts option={JSON.parse(item.genChart ?? '{}')} />
-                    <div style={{ marginBottom: 16 }} />
+                    <div style={{ marginBottom: -16 }} />
+                    <p> {item.genResult} </p>
                     <p> {'Create Time: ' + showTime(item.createTime)} </p>
                   </>
                 }
@@ -169,7 +170,7 @@ const MyChartPage: React.FC = () => {
                   item.status === 'failed' && <>
                     <Result
                       status="error"
-                      title="Generating failed!"
+                      title="Generation failed!"
                       subTitle={item.execMessage}
                     />
                   </>

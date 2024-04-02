@@ -102,7 +102,7 @@ Unlike traditional BI tools, users only need to input the raw dataset and analys
         session:
          store-type: redis
      ```
-  3. and Other for exmaple: `application:`, `rabbitmq:` etc.
+  3. and Other for example: `application:`, `rabbitmq:` etc.
 4. Once the modifications are complete, run the project by executing the `MainApplication` program.
 
 ## OverView

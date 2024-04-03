@@ -29,26 +29,26 @@ Unlike traditional BI tools, users only need to input the raw dataset and analys
 - Multi-environment configuration.
 - Global exception handler + custom error codes.
 
-## Tech Stack
+## Tech Stack 
 ### Front-end
-1. React 18
-2. Ant Design Pro 5.x scaffold & library
-3. OpenAPI: Automatically generate api code
-4. EChart: chart generation
+- React 18
+- Ant Design Pro 5.x scaffold & library
+- OpenAPI: Automatically generate api code
+- EChart: chart generation
 
 ### Back-end
-1. Java Spring Boot
-2. MySQL Database
-3. Redis: Redisson for rate limiting
-4. JDK: thread pool (rate limited & access control) and asynchronization
-5. MyBatis Plus: data access
-6. MyBatisX (IDEA plugin): auto-generate code based on database tables
-7. **RabbitMQ**: message queue
-8. ChatGPT AI SDK: AI power
-9. Swagger + Knife4: project documentation
-10. Easy Excel: spreadsheet data processing
-11. JUnit5: unit test
-12. Other: Hutool utility library, Apache Common Utils, Gson parsing library, Lombok annotations
+- Java Spring Boot
+- MySQL Database
+- Redis: Redisson for rate limiting
+- JDK: thread pool (rate limited & access control) and asynchronization
+- MyBatis Plus: data access
+- MyBatisX (IDEA plugin): auto-generate code based on database tables
+- **RabbitMQ**: message queue
+- ChatGPT AI SDK: AI power
+- Swagger + Knife4: project documentation
+- Easy Excel: spreadsheet data processing
+- JUnit5: unit test
+- Other: Hutool utility library, Apache Common Utils, Gson parsing library, Lombok annotations
 
 ## Quick Start
 ### Environment (recommended)

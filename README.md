@@ -29,7 +29,7 @@ Unlike traditional BI tools, users only need to input the raw dataset and analys
 - Multi-environment configuration.
 - Global exception handler + custom error codes.
 
-## Tech Stack
+## Tech Stack 
 ### Front-end
 1. **React 18**
 2. **Ant Design Pro** v5 scaffold & library
